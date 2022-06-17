@@ -37,7 +37,7 @@ namespace Multitenant.Api
             });
             services.AddTransient<ITenantService, TenantService>();
             services.AddTransient<IProductService, ProductService>();
-            services.AddScoped<IHangfireTenantProvider, HangfireTenantProvider>();
+            services.AddTransient<IHangfireTenantProvider, HangfireTenantProvider>();
             
             services.Configure<TenantSettings>(config.GetSection(nameof(TenantSettings)));
 

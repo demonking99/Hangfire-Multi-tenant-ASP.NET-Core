@@ -1,5 +1,7 @@
 ﻿using Core.Interfaces;
+using Core.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Multitenant.Api.Controllers
@@ -27,20 +29,15 @@ namespace Multitenant.Api.Controllers
             return Ok(productDetails);
         }
         [HttpPost]
-        public async Task<IActionResult> CreateAsync(CreateProductRequest request)
+        public async Task<IActionResult> CreateAsync(ProductsDto request)
         {
             return Ok(await _service.CreateAsync(request.Name, request.Description, request.Rate));
         }
         [HttpPost("CreateWithBackgroundJob")]
-        public IActionResult CreateWithBackgroundJob(CreateProductRequest request)
+        public IActionResult CreateWithBackgroundJob(List<ProductsDto> request)
         {
-            return Ok(_service.CreateWithBackgroundJob(request.Name, request.Description, request.Rate));
+            return Ok(_service.CreateWithBackgroundJob(request));
         }
     }
-    public class CreateProductRequest
-    {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public int Rate { get; set; }
-    }
+    
 }

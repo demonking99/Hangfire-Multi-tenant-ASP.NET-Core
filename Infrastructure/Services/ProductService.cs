@@ -1,5 +1,6 @@
 ﻿using Core.Entities;
 using Core.Interfaces;
+using Core.Models;
 using Hangfire;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -25,9 +26,9 @@ namespace Infrastructure.Services
             await _context.SaveChangesAsync();
             return product;
         }
-        public string CreateWithBackgroundJob(string name, string description, int rate)
+        public string CreateWithBackgroundJob(List<ProductsDto> products)
         {
-            var jobid = backgroundJobs.Enqueue<ProductService>(x => x.insertProduct(name, description, rate));
+            var jobid = backgroundJobs.Enqueue<ProductService>(x => x.insertProduct(products));
             return jobid;
         }
         public async Task<IReadOnlyList<Product>> GetAllAsync()
@@ -39,10 +40,16 @@ namespace Infrastructure.Services
         {
             return await _context.Products.FindAsync(id);
         }
-        public void insertProduct(string name, string description, int rate)
+        public void insertProduct(List<ProductsDto> productsDTO)
         {
-            var product = new Product(name, description, rate);
-            _context.Products.Add(product);
+            List<Product> productsToInsert = new List<Product>();
+            foreach (var productDto in productsDTO)
+            {
+                var product = new Product(productDto.Name, productDto.Description, productDto.Rate);
+                productsToInsert.Add(product);
+            }
+            
+            _context.Products.AddRange(productsToInsert);
             _context.SaveChanges();
         }
     }

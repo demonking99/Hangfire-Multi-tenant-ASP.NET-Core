@@ -3,16 +3,16 @@ namespace Infrastructure.Hangfire.Providers
 {
     public class HangfireTenantProvider : IHangfireTenantProvider
     {
-        private static System.Threading.AsyncLocal<string> HfTenantCode { get; } = new System.Threading.AsyncLocal<string>();
+        private static System.Threading.AsyncLocal<string> HfTenantId { get; } = new System.Threading.AsyncLocal<string>();
 
-        public void HfSetTenant(string TenantCode)
+        public void HfSetTenant(string TenantId)
         {
-            HfTenantCode.Value = TenantCode;
+            HfTenantId.Value = TenantId;
         }
 
         public string HfGetTenantId()
         {
-            return HfTenantCode.Value;
+            return HfTenantId.Value;
         }
     }
 }

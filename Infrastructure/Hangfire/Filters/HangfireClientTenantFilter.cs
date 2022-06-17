@@ -5,18 +5,18 @@ using System;
 
 namespace Infrastructure.Hangfire.Filters
 {
-    public class HangfireClientTenantFilter : JobFilterAttribute,IClientFilter
+    public class HangfireClientTenantFilter : IClientFilter
     {
-        private readonly ITenantService _multiTenant;
-        public HangfireClientTenantFilter(ITenantService multiTenant)
+        private readonly ITenantService _tenantService;
+        public HangfireClientTenantFilter(ITenantService tenantService)
         {
-            _multiTenant = multiTenant;
+            _tenantService = tenantService;
         }
         public void OnCreating(CreatingContext filterContext)
         {
             if (filterContext == null) throw new ArgumentNullException(nameof(filterContext));
 
-            var tenantConfig = _multiTenant.GetTenant();
+            var tenantConfig = _tenantService.GetTenant();
             filterContext.SetJobParameter("TenantId", tenantConfig.TID);
         }
 
